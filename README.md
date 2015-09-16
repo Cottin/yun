@@ -2,16 +2,17 @@
 
 This library favors:
 
-* **only supporting "all-green" browsers**
+
+* **only supporting "all-green" browsers**<br>
 over *messy code for backwards compatability*
 
-* **functional implementations using the ramdajs library**
+* **functional implementations using the ramdajs library**<br>
 over *imparative code*
 
-* **minimal implementations for components supporting the most common use cases**
+* **minimal implementations for components supporting the most common use cases**<br>
 over *an ocean of component properties*
 
-* **composition through render callbacks**
+* **composition through render callbacks**<br>
 over *properties to tell components how to render themselves*
 
 ```
