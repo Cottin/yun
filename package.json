@@ -1,0 +1,47 @@
+{
+  "name": "react-coffee-hot-boilerplate",
+  "version": "0.1.0",
+  "description": "Boilerplate for ReactJS project with hot code reloading and coffee",
+  "main": "src/yun.coffee",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cottin/react-hot-coffee-boilerplate.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "boilerplate",
+    "hot",
+    "reload",
+    "hmr",
+    "live",
+    "edit",
+    "webpack"
+  ],
+  "author": "Victor Cottin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Cottin/react-hot-coffee-boilerplate/issues"
+  },
+  "homepage": "https://github.com/Cottin/react-hot-coffee-boilerplate",
+  "devDependencies": {
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.9.3",
+    "react-hot-loader": "^1.2.7",
+    "webpack": "^1.9.6",
+    "webpack-dev-server": "^1.8.2"
+  },
+  "dependencies": {
+    "lodash": "^3.9.3",
+    "moment": "^2.10.3",
+    "radium": "^0.13.0",
+    "ramda": "^0.15.0",
+    "ramda-extras": "^0.1.0"
+  },
+  "peerDependencies": {
+    "react": "^0.13.0"
+  }
+}
