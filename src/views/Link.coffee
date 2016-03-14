@@ -1,48 +1,30 @@
-React = require 'react'
-{assoc, dissoc, evolve, has, ifElse, keys, mapObj, merge, omit, whereEq} = require 'ramda' #auto_require:ramda
+{PropTypes: {string, func, object, oneOfType}} = React = require 'react'
+Radium = require 'radium'
+{all, any, merge, omit, props} = require 'ramda' #auto_require:ramda
+{cc} = require 'ramda-extras'
 {a} = React.DOM
-{adjustUrl, navigateCallback} = require '../utils/url'
+{createUrlHelper, nav} = require '../utils/url'
+{applyTheme} = require '../utils/react'
 
-Link = React.createClass
+
+Link = Radium React.createClass
 	displayName: 'Link'
 
 	propTypes:
-		url: React.PropTypes.string
-		queryF: React.PropTypes.func
+		to: oneOfType([func, object, string])
+		href: string # if href is used, will behave like a "dumb" link
+		theme: object
+		# NOTE: this component will transfer all props you supply to it's child
 
 	render: ->
-		href = adjustUrl @props
-		linkProps = {href, onClick: navigateCallback(href)}
-		otherProps = omit ['url', 'queryF'], @props
+		{to, href} = @props
+		omitSpecialProps = omit ['to', 'theme']
+		# null supplied since Link doesn't have any default component style
+		otherProps = cc applyTheme(null), omitSpecialProps, @props
+		if href then return a otherProps
+		
+		href = createUrlHelper to
+		linkProps = {href, onClick: nav(href)}
 		a merge(linkProps, otherProps)
 
 module.exports = Link
-
-# like https://github.com/rackt/react-router/blob/master/docs/api/RouterContext.md#makehrefroutename-params-query
-# but accepts a 'route-object' with keys pathName, params and query
-# makeHref = ({pathName, params, query}, router) -> router.makeHref pathName, params, query
-
-# returns a "route-object" with pathName, params and query
-# getRouteData = (router) ->
-# 	return {pathName: router.getCurrentPathname(), params: router.getCurrentParams(), query: router.getCurrentQuery()}
-
-# returns an href with the current pathName and params but with a merge of the current query and first argument
-# makeMergedQueryHref = (query, router) ->
-# 	routeData = getRouteData router
-# 	transformedQuery = merge routeData.query, query
-# 	return makeHref merge(routeData, {query:transformedQuery}), router
-
-# returns an href after passing the current 'route-object' through `evolve` with `transforms` as first argument
-# makeEvolvedHref = (transforms, router) ->
-# 	routeData = getRouteData router
-# 	return makeHref evolve(transforms, routeData), router
-
-# if key exists in current query, returns href without it, if not an href with the key=activeValue
-# makeToggledQueryHref = (key, activeValue, router) ->
-# 	addOrRemove = ifElse has(key), dissoc(key), assoc(key, activeValue)
-# 	return makeEvolvedHref {query: addOrRemove}, router
-
-# checks whether `query` is part of the current query (and therefor active)
-# isQueryActive = (query, router) ->
-# 	queryStringified = mapObj toStr, query
-# 	return whereEq queryStringified, router.getCurrentQuery()

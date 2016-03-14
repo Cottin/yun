@@ -1,6 +1,6 @@
-Link = require './views/Link'
-SpinnerBalls = require './views/SpinnerBalls'
-utils = require './utils/utils'
-themes = require './themes/themes'
+ThemeDefault = require './themes/ThemeDefault'
+ThemeMaterialDesign = require './themes/ThemeMaterialDesign'
+url = require './utils/url'
+react = require './utils/react'
 
-module.exports = {Link, utils, themes}
+module.exports = {ThemeDefault, ThemeMaterialDesign, url, react}
