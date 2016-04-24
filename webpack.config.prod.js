@@ -4,13 +4,16 @@ var webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: [
-    './src/main'
+    './src/yun'
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/static/'
+    path: path.join(__dirname, 'lib'),
+    filename: 'yun-ui-kit.js',
+    library: 'yun-ui-kit',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
+  externals: ['radium'],
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({

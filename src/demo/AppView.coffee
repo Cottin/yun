@@ -7,6 +7,7 @@ StyleRoot = React.createFactory Radium.StyleRoot
 s = require './AppView.style'
 
 LinkDemo = React.createFactory require './LinkDemo'
+DialogDemo = React.createFactory require './DialogDemo'
 
 AppView = Radium React.createClass
 	displayName: 'MyComponent'
@@ -39,6 +40,7 @@ AppView = Radium React.createClass
 					br()
 					br()
 					br()
+					DialogDemo {}
 					br()
 					br()
 					br()

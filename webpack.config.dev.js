@@ -20,10 +20,6 @@ module.exports = {
   ],
   resolve: {
     extensions: ['', '.js', '.coffee'],
-
-    alias: {
-      'ramda-extras': path.join(__dirname, '../ramda-extras'),
-    },
   },
   module: {
     loaders: [
@@ -31,13 +27,6 @@ module.exports = {
       test: /\.coffee?$/,
       loaders: ['babel', 'coffee-loader'],
       include: path.join(__dirname, 'src'),
-    },
-    {
-      test: /\.coffee?$/,
-      loaders: ['coffee-loader'],
-      include: [
-        path.join(__dirname, '../ramda-extras'),
-      ]
     },
     ]
   }

@@ -3,4 +3,6 @@ ThemeMaterialDesign = require './themes/ThemeMaterialDesign'
 url = require './utils/url'
 react = require './utils/react'
 
-module.exports = {ThemeDefault, ThemeMaterialDesign, url, react}
+a = {ThemeDefault, ThemeMaterialDesign, url, react}
+console.log 'a', a
+module.exports = a

@@ -56,6 +56,11 @@ If this is the best solution or if something like css-modules will win is left t
 
 
 # TODO
+ - Components to try
+  - Topbar like inbox
+  - input fields in topbar (like inbox)
+  - Card
+  
  - [ ] switch port from 300 which might be coliding causing hot reloading to fail
 
 

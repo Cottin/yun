@@ -7,7 +7,6 @@ Radium = require 'radium'
 # COMPONENTS ##################################################################
 
 build = (comp, props, children...) ->
-	debugger
 	return React.createElement comp, props, children...
 
 ##### LINK 
@@ -26,6 +25,7 @@ Link = Radium React.createClass
 
 # Link.style = LinkStyle
 
+Dialog = require '../views/Dialog'
 
 # GLOBAL ##################################################################
 modernElement =
@@ -75,4 +75,4 @@ GlobalRules =
 	'.no-scroll':
 		overflow: 'hidden'
 
-module.exports = {Link, GlobalRules}
+module.exports = {Link, Dialog, GlobalRules}
