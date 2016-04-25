@@ -8,6 +8,7 @@ style =
 	position: 'fixed'
 	zIndex: 99999
 	top: 0
+	left: 0
 	display: 'flex'
 	justifyContent: 'center'
 	alignItems: 'center'
