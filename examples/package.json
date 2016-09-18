@@ -1,0 +1,36 @@
+{
+  "name": "yun-ui-kit",
+  "version": "0.1.3",
+  "description": "Simple UI kit for React",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "dist": "npm run clean && npm run build",
+    "start": "node devServer.js",
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cottin/yun.git"
+  },
+  "main": "lib/yun-ui-kit.js",
+  "keywords": [
+    "react",
+    "reactjs",
+    "UI",
+    "UI Kit"
+  ],
+  "author": "Victor Cottin <victor@cottin.se> (http://github.com/Cottin)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Cottin/yun/issues"
+  },
+  "homepage": "https://github.com/Cottin/yun",
+  "devDependencies": {
+    "cross-env": "^1.0.6",
+    "rimraf": "^2.4.3"
+  },
+  "dependencies": {
+    "react": "^15.3.1"
+  }
+}

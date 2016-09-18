@@ -1,0 +1,30 @@
+.button {
+	margin: 0px 10px;
+}
+.button:hover {
+	color: #0EA2FF;
+}
+
+.primary {
+	color: #0EA2FF;
+}
+
+.loud {
+	color: #0EA2FF;
+}
+
+.quiet {
+	color: #9B9B8F;
+}
+
+.strong {
+	font-weight: 500;
+}
+
+.underline {
+	border-bottom: 1px solid transparent;
+}
+
+.underline:hover {
+	border-bottom: 1px solid #0EA2FF;
+}

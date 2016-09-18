@@ -8,7 +8,7 @@ module.exports = {
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client',
-    './src/index'
+    './src/main'
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -21,13 +21,16 @@ module.exports = {
   ],
   resolve: {
     extensions: ['', '.js', '.coffee'],
+    alias: {
+      'yun-ui-kit': path.join(__dirname, '../src'),
+    }
   },
   module: {
     loaders: [
     {
       test: /\.coffee?$/,
       loaders: ['babel', 'coffee-loader'],
-      include: path.join(__dirname, 'src'),
+      include: [path.join(__dirname, 'src'), path.join(__dirname, '../src')],
     },
     {
       test: /\.css$/,

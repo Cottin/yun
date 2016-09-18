@@ -2,7 +2,10 @@ React = require 'react'
 Radium = require 'radium'
 EventListener = require 'fbjs/lib/EventListener'
 {div, h2, p, br, input} = React.DOM
-Dialog = React.createFactory require '../views/Dialog'
+# Dialog = React.createFactory require '../views/Dialog'
+# components = require './themes/ComponentsMaterialDesign'
+# Dialog = React.createFactory components.Dialog
+Dialog = React.createFactory require 'yun-ui-kit/Dialog'
 {type} = R = require 'ramda' #auto_require:ramda
 {mergeOrEvolve} = require 'ramda-extras'
 

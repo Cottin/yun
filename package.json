@@ -52,7 +52,9 @@
     "ramda": "^0.19.1",
     "ramda-extras": "^0.2.3",
     "react": "^0.14.8",
-    "react-dom": "^0.14.8"
+    "react-addons-pure-render-mixin": "^0.14.8",
+    "react-dom": "^0.14.8",
+    "recompose": "^0.20.2"
   },
   "peerDependencies": {
     "radium": "^0.16.6"

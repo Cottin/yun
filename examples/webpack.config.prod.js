@@ -4,16 +4,12 @@ var webpack = require('webpack');
 module.exports = {
   devtool: 'cheap-module-source-map',
   entry: [
-    './src/yun'
+    './src/main'
   ],
   output: {
-    path: path.join(__dirname, 'lib'),
-    filename: 'yun-ui-kit.js',
-    library: 'yun-ui-kit',
-    libraryTarget: 'umd',
-    umdNamedDefine: true
+    path: path.join(__dirname, 'prod'),
+    filename: 'bundle.js',
   },
-  externals: ['radium'],
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
@@ -29,13 +25,16 @@ module.exports = {
   ],
   resolve: {
     extensions: ['', '.js', '.coffee'],
+    alias: {
+      'yun-ui-kit': path.join(__dirname, '../src'),
+    }
   },
   module: {
     loaders: [
     {
       test: /\.coffee?$/,
       loaders: ['babel', 'coffee-loader'],
-      include: path.join(__dirname, 'src'),
+      include: [path.join(__dirname, 'src'), path.join(__dirname, '../src')],
     },
     {
       test: /\.css$/,

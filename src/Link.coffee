@@ -3,8 +3,8 @@ Radium = require 'radium'
 {all, any, merge, omit, props} = require 'ramda' #auto_require:ramda
 {cc} = require 'ramda-extras'
 {a} = React.DOM
-{createUrlHelper, nav} = require '../utils/url'
-{applyTheme} = require '../utils/react'
+{createUrlHelper, nav} = require './utils/url'
+{applyTheme} = require './utils/reactUtils'
 
 
 Link = Radium React.createClass
