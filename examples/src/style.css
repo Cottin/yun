@@ -6,3 +6,11 @@ html, body {
 body {
 	position: relative;
 }
+
+	/* basic things that Yun-ui-kit assumes */
+/*	display: flex;
+	flex-direction: column;
+*/
+* {
+	box-sizing: border-box;
+}

@@ -20,7 +20,7 @@ module.exports = React.createClass
 		requestChangeSelectedIndex: func
 		requestClose: func
 		pick: func
-		canSelectWithTab: bool
+		canPickWithTab: bool
 		# filter: func
 
 		# popover: shape
@@ -89,6 +89,7 @@ module.exports = React.createClass
 				# up arrow by default moves cursor in input to start, so we prevent it
 				e.preventDefault()
 			when DOWN
+				debugger
 				newIndex = Math.min inc(@props.selectedIndex), length(@props.items)-1
 				didChange = @props.requestChangeSelectedIndex newIndex
 				if !didChange then return
@@ -98,7 +99,7 @@ module.exports = React.createClass
 				# down arrow by default moves cursor in input to end, so we prevent it
 				e.preventDefault()
 			when TAB
-				if @props.canSelectWithTab then @props.pick()
+				if @props.canPickWithTab then @props.pick()
 
 	getInput: ->
 		return @refs.input

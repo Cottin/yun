@@ -45,6 +45,7 @@ LinkDemo = Radium React.createClass
 				Link {to: dissoc('showPopup')}, 'Close popup'
 				br()
 				Link {to: mergeOrEvolve({something: [true, R.not]})}, 'Toggle something'
+				Link {to: mergeOrEvolve({something: [true, R.not]})}, 'Toggle something'
 				br()
 				Link {to: ifElse has('something'), dissoc('something'), merge({something: true})},
 					'Toggle something only showing if it\'s true'

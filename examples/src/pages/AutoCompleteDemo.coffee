@@ -10,8 +10,9 @@ EventListener = React.createFactory require 'yun-ui-kit/helpers/EventListener'
 browserUtils = require 'yun-ui-kit/utils/browserUtils'
 domUtils = require 'yun-ui-kit/utils/domUtils'
 AutoComplete = require 'yun-ui-kit/AutoComplete'
-{evolveState, build: _} = reactUtils = require 'yun-ui-kit/utils/reactUtils'
-{always, dec, filter, inc, isNil, length, props, set, test, type, without} = R = require 'ramda' #auto_require:ramda
+AutoCompleteClient = require 'yun-ui-kit/AutoCompleteClient'
+{evolveState, mergeState, build: _} = reactUtils = require 'yun-ui-kit/utils/reactUtils'
+{__, always, dec, filter, inc, isNil, length, merge, props, set, take, test, type, without} = R = require 'ramda' #auto_require:ramda
 {cc, mergeOrEvolve, ymap} = require 'ramda-extras'
 
 # What to support?
@@ -21,7 +22,7 @@ AutoComplete = require 'yun-ui-kit/AutoComplete'
 Item = React.createClass
 	displayName: 'Item'
 
-	mixins: [PureRenderMixin]
+	# mixins: [PureRenderMixin]
 
 	propTypes:
 		text: PropTypes.string
@@ -30,11 +31,16 @@ Item = React.createClass
 		ReactDOM.findDOMNode(this).focus()
 
 	render: ->
+
 		{text, isSelected} = @props
-		style = if isSelected then {background: 'lightblue'} else {}
+		if isSelected
+			style = {background: 'lightblue', cursor: 'pointer'}
+		else
+			style = {cursor: 'pointer'}
+		props_ = merge @props, {style}
 		# in order for the browser to scroll to the element being .focus()-ed
 		# we need to set tabIndex
-		div {style, tabIndex: -1}, @props.text
+		div props_, @props.text
 
 Item_ = React.createFactory Item
 
@@ -48,9 +54,31 @@ module.exports = React.createClass
 		anchorEl: null
 		isOpen: false
 		selectedIndex: null
-		items: pokemons
+
+		# simple:
+		# 	filteredItems: take 45, pokemons
+		# 	text: ''
+		# 	isOpen: false
+
+		simpleFilteredItems: take 45, pokemons
+		simpleText: ''
+		simpleIsOpen: false
+		simpleAnchorEl: null
+		simpleSelectedIndex: null
+
+		simpleAutoCompleteText: ''
+		items: take 45, pokemons
+
+		clientItems: take 45, pokemons
+		clientItemPicked: null
+
+		clientDefaultItems: take 45, pokemons
+		clientDefaultItemPicked: null
+
+		itemsFromServer: []
 
 		openId: null
+
 
 	# popover on big screens modal on smaller (part of popup component?)
 	#		or maybe put that in other component?
@@ -60,21 +88,109 @@ module.exports = React.createClass
 	render: ->
 		div {},
 			h2 {}, 'AutoComplete'
-			p {}, 'Simple'
 			br()
+			p {}, 'Simple'
 			_ AutoComplete,
+				items: @state.simpleFilteredItems
 				renderItem: (props, item) ->
-					div props, item
-				filterItems: (text) =>
-					re = new RegExp "^#{text}", 'i'
-					filter test(re), @state.items
-				onPicked: (item) ->
-					console.log 'picked', item
-				inputProps: {style: {width: 200}}
-				popoverProps:
-					anchorMargin: 10
+					_ Item, merge(props, {text: item})
+				renderInput: (defaultProps) =>
+					input merge(defaultProps, {
+						value: @state.simpleText
+						onChange: @onSimpleInputChange
+					})
+				renderEmpty: -> div {}, 'No pokemons matches'
+				onPicked: @filterSimpleItems
+				text: @state.simpleText
+				canPickWithTab: true
+				onRequestOpen: (e) =>
+					@setState {simpleIsOpen: true, simpleAnchorEl: e.currentTarget}
+				onRequestClose: =>
+					@setState {simpleIsOpen: false, simpleAnchorEl: null}
+				selectedIndex: @state.simpleSelectedIndex
+				onRequestSelectedIndexChange: (newIndex) =>
+					@setState {simpleSelectedIndex: newIndex}
+				popover:
+					props:
+						placement: 'bottom-right'
+						anchorEl: @state.simpleAnchorEl
+						isOpen: @state.simpleIsOpen
+					style: {width: 200, padding: 10}
+
+			br()
+			p {}, 'Client search:'
+			_ AutoCompleteClient,
+				items: @state.clientItems
+				filter: (text, item) -> test new RegExp("^#{text}", 'i'), item
+				renderItem: (props, item) -> _ Item, merge(props, {text: item})
+				renderInput: (defaultProps) -> input defaultProps
+				renderEmpty: -> div {}, 'No pokemons matches'
+				onPicked: (item) => @setState {clientItemPicked: item}
+				canPickWithTab: true
+				popover:
+					props:
+						placement: 'bottom-right'
+					style: {width: 200, padding: 10}
+
+			# _ AutoCompleteClient, {},
+			# 	({Item, Input}) ->
+			# 		Item {},
+			# 			ListItem {}
+			# 		Input {}
+
+			div {}, 'Picked item: ' + @state.clientItemPicked
+
+			br()
+			p {}, 'Client search (making use of defaults):'
+			_ AutoCompleteClient,
+				items: @state.clientDefaultItems
+				onPicked: (item) => @setState {clientDefaultItemPicked: item}
+			div {}, 'Picked item: ' + @state.clientDefaultItemPicked
 
 
+			# p {}, 'Server search:'
+			# br()
+			# _ AutoComplete,
+			# 	items: @state.itemsFromServer
+			# 	renderItem: (props, item) ->
+			# 		_ Item, merge(props, {text: item})
+			# 	filterItems: (text, items) => items # no filter for server-side search
+			# 	onPicked: (item) => @setState {serverSideAutoCompleteText: item}
+			# 	text: @state.serverSideAutoCompleteText
+			# 	onInputChange: (e) =>
+			# 		@fakeServerFetch e.currentTarget.value
+			# 		@setState {serverSideAutoCompleteText: e.currentTarget.value}
+
+
+			br()
+			br()
+			br()
+			br()
+			p {}, 'Customized list with groups: TODO'
+
+	onSimpleInputChange: (e) ->
+		@filterSimpleItems e.currentTarget.value
+		if !@state.simpleIsOpen
+			@setState {simpleIsOpen: true, simpleAnchorEl: e.currentTarget}
+		@setState {simpleSelectedIndex: 0}
+		
+	filterSimpleItems: (text) ->
+		re = new RegExp "^#{text}", 'i'
+		filteredItems = filter test(re), @state.items
+		# mergeState @, {simple: {filteredItems, text}}
+		@setState
+			simpleFilteredItems: filteredItems
+			simpleText: text
+		# evolveState @, {simple: merge(__, {filteredItems, text})}
+		# TODO, this api:
+		# setStateAt @, 'simple', {filteredItems}
+
+	fakeServerFetch: (text) ->
+		re = new RegExp "^#{text}", 'i'
+		filteredItems = filter test(re), @state.items
+		setItems = () =>
+			@setState {itemsFromServer: filteredItems}
+		window.setTimeout setItems, 1000
 			# AutoComplete
 			# 	filter: (text) -> pokemons
 			# 	renderInput: ->

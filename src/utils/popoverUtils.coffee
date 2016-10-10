@@ -1,4 +1,4 @@
-{into, merge, over, props} = require 'ramda' #auto_require:ramda
+{into, merge, over, props, values} = require 'ramda' #auto_require:ramda
 
 # Supported placements of the popover in relation to its anchor
 exports.PLACEMENTS = PLACEMENTS = [
@@ -28,9 +28,9 @@ toCoord = (args) ->
 	popover: popover
 
 	anchor:
-		top: anchor.top + scrollY
+		top: anchor.top + viewport.scrollY
 		bottom:  anchor.top + anchor.height + viewport.scrollY
-		left: anchor.left + scrollX
+		left: anchor.left + viewport.scrollX
 		right: anchor.left + anchor.width + viewport.scrollX
 		height: anchor.height
 		width: anchor.width
@@ -51,7 +51,11 @@ toCoord = (args) ->
 
 # The opposite of toCoord
 fromCoord = ({viewport}, {top, bottom, maxHeight, left, right, maxWidth}) ->
-	{top, left, maxHeight, maxWidth,
+	{top, left,
+	# If we don't round these values the popover content might be a bit bigger
+	# than the popover with like 1-2 pixels and it looks ugly
+	maxHeight: Math.round(maxHeight),
+	maxWidth: Math.round(maxWidth),
 	bottom: if bottom then viewport.bodyHeight - bottom,
 	right: if right then viewport.bodyWidth - right}
 

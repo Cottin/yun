@@ -1,4 +1,4 @@
-{any, curry, evolve, keys, merge, over, pick, prop, props} = require 'ramda' #auto_require:ramda
+{T, any, curry, evolve, isNil, keys, mapObjIndexed, merge, over, pick, prop, props, type} = R = require 'ramda' #auto_require:ramda
 {cc, yforEach} = require 'ramda-extras'
 lo = require 'lodash'
 React = require 'react'
@@ -17,10 +17,40 @@ exports.adjustState = adjustState = (component, f, cb) ->
 	result = f component.state
 	component.setState result, cb
 
+# Is this really needed?
+# Why no only do {createElement: _} = React = require 'react'
 # comp, obj, [comp] -> comp
 # takes care of the React.createFactory dance for you
-exports.build = build = (comp, props, children...) ->
-	return React.createElement comp, props, children...
+# exports.build = build = (comp, props, children...) ->
+# 	return React.createElement comp, props, children...
+
+# IDEAS THAT DIDN'T PAN OUT ----------------------------
+# exports.xbuild = build = (comp, style, props, children...) ->
+# 	console.log {comp}, typeof(comp), {type: comp.type}
+# 	if R.is String, comp.type 
+# 		comp = comp.type
+
+# 	if isNil style
+# 		return React.createElement comp
+
+# 	if !style.__isStyle
+# 		return React.createElement comp, style, [props, children...]
+
+# 	enhancedProps = merge props,
+# 		dataStyleName: style.__styleName
+
+# 	return React.createElement comp, enhancedProps, children...
+
+# exports.Pure = Pure = (displayName, propTypes, render) ->
+# 	return React.createClass
+# 		displayName: displayName
+# 		propTypes: propTypes
+# 		render: -> render this.props
+
+# exports.style = style = (spec) ->
+# 	addName = (v, k) -> merge {__styleName: k}, v
+# 	merge mapObjIndexed(addName, spec), {__isStyle: true}
+# ------------------------------------------------------
 
 # o -> o -> o -> o
 # Helps implements the "theme-pattern" which works as follows:

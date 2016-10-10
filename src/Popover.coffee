@@ -14,6 +14,9 @@ style =
 	background: '#FFFFFF'
 	border: '1px solid #D9D9D9'
 	boxShadow: '0px 2px 6px 0px rgba(0,0,0,0.17)'
+	# If we have border-box the borders are included and then the popover content
+	# overflows outside the bottom of the popover, so we use content-box.
+	boxSizing: 'content-box' 
 
 Popover = React.createClass
 	propTypes:
@@ -42,12 +45,9 @@ Popover = React.createClass
 		{isOpen} = @props
 		if !isOpen then return null
 
-		console.log 'render EventListener'
 		div {style: {display: 'none'}},
 			EventListener
 				element: window
-				# setInterval: [@setPosition, 1000000, 0]
-				# setInterval: [@setPosition, 1000]
 				setInterval: [@setPosition, 10]
 				onMouseDown: @onMouseDown
 				onTouchStart: @onMouseDown
@@ -57,24 +57,6 @@ Popover = React.createClass
 				# Although, now we changed to onMouseDown instead and then this problem
 				# disappears
 				# delayRegistration: 0
-			# 	onWheel: (e) =>
-			# 		# Research around this concludes you cannot cancel the scroll event
-			# 		# but you can cancel the events provoking the scroll event
-			# 		# http://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
-			# 		# http://stackoverflow.com/questions/8813051/determine-which-element-the-mouse-pointer-is-on-top-of-in-javascript
-
-			# 		hoveredElement = document.elementFromPoint(e.clientX, e.clientY)
-			# 		if isNil hoveredElement then return
-
-			# 		popoverEl = @refs.portal.getLayer().children[0]
-			# 		firstChild = popoverEl.children[0]
-			# 		window.popoverEl = popoverEl
-
-			# 		if isNil popoverEl then return
-
-			# 		if domUtils.isDescendant popoverEl, hoveredElement
-			# 			null
-			# 			# e.preventDefault()
 
 			Portal {renderFn: @renderPortal, ref: 'portal'}
 
@@ -86,13 +68,11 @@ Popover = React.createClass
 		popoverEl = @refs.portal.getLayer().children[0]
 		if domUtils.isDescendant(popoverEl, e.target) then return
 
-		console.log('clickAway')
 		@props.onRequestClose('clickAway', e)
 
 	getArgs: ->
 		{anchorEl, viewportMargin, anchorMargin, maxHeight, placement} = @props
 
-		# todo: handle small screens
 		if !anchorEl then throw new Error 'anchorEl not set'
 
 		popoverEl = @refs.portal.getLayer().children[0]
@@ -107,17 +87,13 @@ Popover = React.createClass
 			margin: anchorMargin
 
 		viewport =
-			# note: innerHeight doesn't subtract scrollbars, ie. clientHeight
+			# note: innerHeight doesn't subtract scrollbars, so use clientHeight
 			height: window.document.documentElement.clientHeight
 			width: window.document.documentElement.clientWidth
-			scrollY: window.scrollY
-			scrollX: window.scrollX
+			# scroll positions: https://github.com/reactjs/react-router/issues/605
+			scrollX: window.pageXOffset || document.documentElement.scrollLeft,
+			scrollY: window.pageYOffset || document.documentElement.scrollTop,
 			margin: viewportMargin
-			# note: I think scrollHeight is more correct than offsetHeight (and width) Seems lite not :)
-			# scrollHeight: window.document.documentElement.scrollHeight
-			# scrollHeight: window.document.documentElement.offsetHeight
-			# scrollWidth: window.document.documentElement.offsetWidth
-			# scrollWidth: window.document.documentElement.scrollWidth
 			bodyHeight: window.document.documentElement.offsetHeight
 			bodyWidth: window.document.documentElement.offsetWidth
 
@@ -125,14 +101,11 @@ Popover = React.createClass
 
 	setPosition: ->
 		if !@props.isOpen then return
-		# todo:
-		# if (@isFullScreen()) return // The fullscreen position is only calculated on render as it will not move around on the screen when scrolling.
 
 		{popoverEl} = args = @getArgs()
 		if isNil(args) || !@didChange args then return
 
 		{top, bottom, left, right, maxHeight, maxWidth} = popoverUtils.calcPosition args
-		# console.log 'result', {top, bottom, left, right, maxHeight, maxWidth}
 		
 		if top
 			popoverEl.style.top = top + 'px'
@@ -152,6 +125,7 @@ Popover = React.createClass
 		popoverEl.style.maxWidth = maxWidth + 'px'
 
 	didChange: (result) ->
+		# simplistic optimization
 		isSame = equals result, @_lastResult
 		@_lastResult = result
 		return !isSame

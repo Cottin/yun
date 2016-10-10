@@ -1,5 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
+PureRenderMixin = require 'react-addons-pure-render-mixin'
 recompose = require 'recompose'
 {any, has, isNil, set} = R = require 'ramda' #auto_require:ramda
 
@@ -11,6 +12,8 @@ domUtils = require '../utils/domUtils'
 # TODO: Make it work on touch devices
 module.exports = (component) -> React.createClass
 	displayName: recompose.wrapDisplayName component, 'blockScroll'
+	
+	mixins: [PureRenderMixin]
 
 	componentDidMount: ->
 		window.addEventListener 'wheel', @onWheel
